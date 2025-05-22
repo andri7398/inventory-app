@@ -57,6 +57,13 @@ public class OrderController {
 
     @PostMapping("/getAll")
     public ResponseEntity<Object> getAll(@RequestBody PaginationDTO dto){
+        if (dto.page() == null) {
+            return ResponseEntity.badRequest().body("Page is required");
+        }
+        if (dto.size() == null || dto.size() < 0) {
+            return ResponseEntity.badRequest().body("Size is required and not 0");
+        }
+
         try {
             Integer size = dto.size() == null? 10 : dto.size();
             Integer page = dto.page() == null? 0 : dto.page();
@@ -79,6 +86,18 @@ public class OrderController {
 
     @PostMapping("/insertOrUpdate")
     public ResponseEntity<Object> insertOrUpdate(@RequestBody OrderDTO dto){
+        if (dto.itemId() == null ) {
+            return ResponseEntity.badRequest().body("Item id is required");
+        }
+
+        if (dto.qty() == null || dto.qty() < 0) {
+            return ResponseEntity.badRequest().body("Quantity is required and must be non-negative");
+        }
+
+        if (dto.price() == null ) {
+            return ResponseEntity.badRequest().body("Price is required");
+        }
+
         try {
             Orders data;
 

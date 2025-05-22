@@ -1,4 +1,7 @@
 package com.example.inventory_app.dto;
 
-public record ItemDTO(Long id, String name, Long price, Long qty) {
+import jakarta.validation.constraints.NotNull;
+
+public record ItemDTO(
+        Long id, String name, Long price, Long qty) {
 }
