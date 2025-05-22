@@ -119,7 +119,9 @@ public class InventoryController {
             Optional<Inventory> optionalItem = repo.findById(id);
 
             if(optionalItem.isPresent()){
-                repo.delete(optionalItem.get());
+                Inventory inventory = optionalItem.get();
+                inventory.setDeleted(true);
+                repo.save(inventory);
                 return ResponseEntity.status(HttpStatus.OK).body("Data with id " + id + " has successfully deleted");
             }
 

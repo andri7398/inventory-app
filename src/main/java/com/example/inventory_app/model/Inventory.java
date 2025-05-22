@@ -2,8 +2,10 @@ package com.example.inventory_app.model;
 
 import com.example.inventory_app.constant.InventoryType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 @Entity
+@Where(clause = "deleted = false")
 public class Inventory {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -17,6 +19,8 @@ public class Inventory {
 
     @Enumerated(EnumType.STRING)
     private InventoryType type;
+
+    private boolean deleted = false;
 
     public Long getId() {
         return id;
@@ -48,5 +52,13 @@ public class Inventory {
 
     public void setType(InventoryType type) {
         this.type = type;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

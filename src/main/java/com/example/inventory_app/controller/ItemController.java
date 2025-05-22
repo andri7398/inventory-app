@@ -97,7 +97,10 @@ public class ItemController {
             Optional<Item> optionalItem = repo.findById(id);
 
             if(optionalItem.isPresent()){
-                repo.delete(optionalItem.get());
+
+                Item item = optionalItem.get();
+                item.setDeleted(true);
+                repo.save(item);
                 return ResponseEntity.status(HttpStatus.OK).body("Data with id " + id + " has successfully deleted");
             }
 

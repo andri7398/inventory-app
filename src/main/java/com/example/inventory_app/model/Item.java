@@ -4,8 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.hibernate.annotations.Where;
 
 @Entity
+@Where(clause = "deleted = false")
 public class Item {
 
     @Id
@@ -16,6 +18,8 @@ public class Item {
     private Long price;
 
     private Long qty;
+
+    private boolean deleted = false;
 
     public Item() {}
 
@@ -49,5 +53,13 @@ public class Item {
 
     public void setQty(Long qty) {
         this.qty = qty;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

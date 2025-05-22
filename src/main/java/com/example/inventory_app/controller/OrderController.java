@@ -31,7 +31,7 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOne(@PathVariable String id){
         try {
-            Optional<Orders> optionalItem = repo.findById(id);
+            Optional<Orders> optionalItem = repo.findById(id.toUpperCase());
 
             return optionalItem.<ResponseEntity<Object>>map(item -> {
                 OrderDTO dto = new OrderDTO(item.getOrderNo(), item.getItem().getId(), item.getQty(), item.getPrice());
@@ -143,13 +143,15 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{orderNo}")
     public ResponseEntity<Object> delete(@PathVariable String orderNo){
         try {
             Optional<Orders> optionalItem = repo.findById(orderNo);
 
             if(optionalItem.isPresent()){
-                repo.delete(optionalItem.get());
+                Orders order = optionalItem.get();
+                order.setDeleted(true);
+                repo.save(order);
                 return ResponseEntity.status(HttpStatus.OK).body("Data with id " + orderNo + " has successfully deleted");
             }
 
