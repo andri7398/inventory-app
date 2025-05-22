@@ -87,6 +87,18 @@ public class InventoryController {
             }
             Item dataItem = itemOptional.get();
 
+            if(dto.type().equalsIgnoreCase(InventoryType.W.name())){
+                if(dataItem.getQty() < dto.qty()){
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("Item with name" + dataItem.getName() + " is insufficient to withdraw.");
+                }
+
+                dataItem.setQty(dataItem.getQty()-dto.qty());
+            }else{
+                dataItem.setQty(dataItem.getQty()+dto.qty());
+            }
+            itemRepo.save(dataItem);
+
             data.setItem(dataItem);
             data.setQty(dto.qty());
             data.setType(InventoryType.valueOf(dto.type()));
@@ -95,6 +107,24 @@ public class InventoryController {
 
             InventoryDTO result = new InventoryDTO(saved.getId(), saved.getItem().getId(), saved.getQty(), saved.getType().name());
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id){
+        try {
+            Optional<Inventory> optionalItem = repo.findById(id);
+
+            if(optionalItem.isPresent()){
+                repo.delete(optionalItem.get());
+                return ResponseEntity.status(HttpStatus.OK).body("Data with id " + id + " has successfully deleted");
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item with ID " + id + " not found");
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
