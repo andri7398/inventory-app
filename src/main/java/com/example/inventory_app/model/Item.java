@@ -15,6 +15,8 @@ public class Item {
     private String name;
     private Long price;
 
+    private Long qty;
+
     public Item() {}
 
     public Long getId() {
@@ -39,5 +41,13 @@ public class Item {
 
     public void setPrice(Long price) {
         this.price = price;
+    }
+
+    public Long getQty() {
+        return qty;
+    }
+
+    public void setQty(Long qty) {
+        this.qty = qty;
     }
 }

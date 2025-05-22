@@ -32,7 +32,7 @@ public class ItemController {
             Optional<Item> optionalItem = repo.findById(id);
 
             return optionalItem.<ResponseEntity<Object>>map(item -> {
-                ItemDTO dto = new ItemDTO(item.getId(), item.getName(), item.getPrice());
+                ItemDTO dto = new ItemDTO(item.getId(), item.getName(), item.getPrice(), item.getQty());
                 return ResponseEntity.status(HttpStatus.OK).body(dto);
             }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Item with ID " + id + " not found"));
@@ -55,7 +55,8 @@ public class ItemController {
                     .map(item -> new ItemDTO(
                             item.getId(),
                             item.getName(),
-                            item.getPrice()
+                            item.getPrice(),
+                            item.getQty()
                     )).toList();
             return ResponseEntity.status(HttpStatus.OK).body(list);
         } catch (Exception e) {
@@ -78,10 +79,11 @@ public class ItemController {
 
             data.setName(dto.name());
             data.setPrice(dto.price());
+            data.setQty(dto.qty());
 
             Item saved = repo.save(data);
 
-            ItemDTO result = new ItemDTO(saved.getId(), saved.getName(), saved.getPrice());
+            ItemDTO result = new ItemDTO(saved.getId(), saved.getName(), saved.getPrice(), saved.getQty());
             return ResponseEntity.status(HttpStatus.CREATED).body(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
